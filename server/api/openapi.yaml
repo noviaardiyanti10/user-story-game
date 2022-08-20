@@ -1,0 +1,1740 @@
+openapi: 3.0.0
+info:
+  title: User Game History API
+  description: OpenAPI for User Suit Game History RESTful API
+  contact:
+    name: Ni Putu Novia Ardiyanti
+    email: putunovia546@gmail.com
+  version: 1.0.1
+servers:
+- url: /
+  description: Mock Server
+security:
+- AuthToken: []
+tags:
+- name: Main
+  description: operation to check API
+- name: Authentication
+  description: operation to register and login users
+- name: Player
+  description: operation to update and read player biodata
+- name: Game
+  description: "operation to create room, update room, get open room get user game\
+    \ history, and played game"
+- name: Admin
+  description: "operation to get user, game, room and can only access by admin"
+paths:
+  /:
+    get:
+      tags:
+      - Main
+      summary: check and test API
+      description: "This endpoit use for check healht of API, when run this endpoint\
+        \ will show json status"
+      operationId: checkAPI
+      responses:
+        "200":
+          description: Body schema responses for main API
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+      security: []
+      x-swagger-router-controller: Main
+  /v1/login:
+    post:
+      tags:
+      - Authentication
+      summary: User get access token
+      description: "Endpoint for login with credential input (username and password).\
+        \ If credential valid, user will get access token. If user dont have any account,\
+        \ please register before."
+      operationId: loginUser
+      requestBody:
+        $ref: '#/components/requestBodies/LoginRequest'
+      responses:
+        "201":
+          description: Login and register response body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+        "401":
+          description: Fail responses body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+      security: []
+      x-swagger-router-controller: Authentication
+  /v1/register:
+    post:
+      tags:
+      - Authentication
+      summary: Create new account
+      description: Endpoint for create new account in this site. If username already
+        exist it will return status code `422`
+      operationId: registerUser
+      requestBody:
+        $ref: '#/components/requestBodies/RegistrationRequest'
+      responses:
+        "201":
+          description: Login and register response body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+        "422":
+          description: Failed to register response body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_422'
+      security: []
+      x-swagger-router-controller: Authentication
+  /v1/biodata:userId:
+    get:
+      tags:
+      - Player
+      summary: Get player biodata
+      description: "This endpoint for get spesific biodata by giving user ID in the\
+        \ path. If id not found, site will return `404`"
+      operationId: getBiodata
+      responses:
+        "201":
+          description: Biodata response body schema for create and get operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_1'
+              example:
+              - status: OK
+              - data:
+                  id: 1
+                  user:
+                    id: 1
+                    username: sabrinaok3
+                  avatarUrl: my-photo.jpg
+                  bio: twitter.com/novia10
+                  phoneNumber: 897545256
+                  address: Tanjung Priok Jakarta
+        "403":
+          description: "When player try to access, modify, and delete someone's else\
+            \ resource and other role"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+        "404":
+          description: Error response if id or page not found or unavailabel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404'
+      security:
+      - AuthToken: []
+      x-swagger-router-controller: Player
+    post:
+      tags:
+      - Player
+      summary: Create player biodata
+      description: Player can create and fullfill biodata and player must login to
+        access this site
+      operationId: createBiodataPlayer
+      requestBody:
+        $ref: '#/components/requestBodies/CreateBiodataRequest'
+      responses:
+        "201":
+          description: Biodata response body schema for create and get operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_1'
+              example:
+              - status: OK
+              - data:
+                  id: 1
+                  user:
+                    id: 1
+                    username: sabrinaok3
+                  avatarUrl: my-photo.jpg
+                  bio: twitter.com/novia10
+                  phoneNumber: 897545256
+                  address: Tanjung Priok Jakarta
+        "403":
+          description: "When player try to access, modify, and delete someone's else\
+            \ resource and other role"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+        "404":
+          description: Error response if id or page not found or unavailabel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404'
+      security:
+      - AuthToken: []
+      x-swagger-router-controller: Player
+  /v1/rooms:
+    get:
+      tags:
+      - Game
+      summary: Get open rooms in game
+      description: This endpoint use for get all the rooms that are still open in
+        the game.
+      operationId: getOpenRooms
+      responses:
+        "201":
+          description: Response body schema for get all open room in game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_2'
+              example:
+              - status: OK
+              - data:
+                - id: 1
+                  name: room acak
+                  status: open
+                  createdAt: 09-02-2022
+                  game:
+                    id: 1
+                    state: WAITING...
+                    roundCount: 0
+                    createdAt: 12-12-2021
+                - id: 2
+                  name: justroom
+                  status: open
+                  createdAt: 09-02-2022
+                  game:
+                    id: 1
+                    state: WAITING...
+                    roundCount: 0
+                    createdAt: 12-12-2021
+        "403":
+          description: "When player try to access, modify, and delete someone's else\
+            \ resource and other role"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+      security:
+      - AuthToken: []
+      x-swagger-router-controller: Game
+  /v1/games:userId:
+    get:
+      tags:
+      - Game
+      summary: Get all games that user playing
+      description: This endpoint use for get list games that user playing.
+      operationId: getGames
+      responses:
+        "201":
+          description: Response body schema for get game that user played
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_3'
+              example:
+              - status: OK
+              - data:
+                - id: 1
+                  username: sabrina12333
+                  game:
+                  - id: 1
+                    state: FINISHED
+                    winner:
+                      id: 1
+                      username: binar1234
+                    roundCount: 3
+                    createdAt: 01-10-2021
+                    finishedAt: 02-10-2021
+                    isWinner: false
+                  - id: 2
+                    state: STARTED
+                    roundCount: 1
+                    createdAt: 01-10-2021
+        "403":
+          description: "When player try to access, modify, and delete someone's else\
+            \ resource and other role"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+        "404":
+          description: Error response if id or page not found or unavailabel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404'
+      security:
+      - AuthToken: []
+      x-swagger-router-controller: Game
+  /v1/round/:userId:
+    get:
+      tags:
+      - Game
+      summary: Get all rounds that user playing
+      description: This endpoint use for get all round that user playing in the game.
+        User can get played and unplayed round here.
+      operationId: getRounds
+      responses:
+        "201":
+          description: Response body schema for get round where user as player
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_4'
+              example:
+              - status: OK
+              - data:
+                  Round:
+                  - id: 1
+                    number: 1
+                    state: PLAYER_1_TURN
+                    createdAt: 19-03-2021
+                    finishedAt: 02-10-2021
+                    game:
+                      id: 1
+                      state: FINISHED
+                      winner:
+                        id: 1
+                        username: binar1234
+                      roundCount: 1
+                      createdAt: 01-10-2021
+                      finishedAt: 02-10-2021
+                    user:
+                      id: 1
+                      username: binar1234
+                    choice: ROCK
+                    winner:
+                      id: 1
+                      username: binar1234
+                  - id: 3
+                    number: 1
+                    state: FINISHED
+                    createdAt: 19-03-2021
+                    finishedAt: 02-10-2021
+                    game:
+                      id: 1
+                      state: FINISHED
+                      winner:
+                        id: 1
+                        username: binar1234
+                      roundCount: 2
+                      createdAt: 01-10-2021
+                      finishedAt: 02-10-2021
+                    user:
+                    - id: 1
+                      username: binar1234
+                      choice: PAPER
+                    - id: 2
+                      username: sabrinaa12333
+                      choice: ROCK
+                    winner:
+                      id: 1
+                      username: binar1234
+                  - id: 7
+                    number: 1
+                    state: PLAYER_TWO_TURN
+                    createdAt: 19-07-2021
+                    Game:
+                      id: 2
+                      state: STARTED
+                      roundCount: 1
+                      createdAt: 01-10-2021
+        "403":
+          description: "When player try to access, modify, and delete someone's else\
+            \ resource and other role"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+        "404":
+          description: Error response if id or page not found or unavailabel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404'
+      security:
+      - AuthToken: []
+      x-swagger-router-controller: Game
+  /v1/round/:gameId:
+    post:
+      tags:
+      - Game
+      summary: Start round game
+      description: This endpoint use for player when input choice in current round
+      operationId: postRounds
+      requestBody:
+        $ref: '#/components/requestBodies/RoundOKRequest'
+      responses:
+        "201":
+          description: Responses body schema for create round and result round
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_4'
+              example:
+              - status: OK
+              - data_example_1:
+                  id: 1
+                  number: 1
+                  state: PLAYER_1_TURN
+                  choice: ROCK
+                message: Waiting opponent choice..
+              - data_example_2:
+                  id: 3
+                  number: 3
+                  state: FINISHED
+                  winner:
+                    id: 1
+                    username: binar1234
+                  createdAt: 01-10-2021
+                  finishedAt: 02-10-2021
+        "403":
+          description: "When player try to access, modify, and delete someone's else\
+            \ resource and other role"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+        "404":
+          description: Error response if id or page not found or unavailabel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404'
+      security:
+      - AuthToken: []
+      x-swagger-router-controller: Game
+  /v1/stats/:userId:
+    get:
+      tags:
+      - Game
+      summary: Get stats player account
+      description: This endpoint use for get user stats record in the game
+      operationId: getStats
+      responses:
+        "201":
+          description: Response body schema for get player stats from game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_5'
+              example:
+              - status: OK
+              - data:
+                  id: 1
+                  user:
+                    username: binar1234
+                  level:
+                    id: 1
+                    name: Novice
+                    minPoint: 0
+                    maxPoint: 1199
+                  point: 10
+                  winRate: 10
+        "403":
+          description: "When player try to access, modify, and delete someone's else\
+            \ resource and other role"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+        "404":
+          description: Error response if id or page not found or unavailabel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404'
+      security:
+      - AuthToken: []
+      x-swagger-router-controller: Game
+  /v1/opponents:
+    get:
+      tags:
+      - Game
+      summary: Get stats player account
+      description: "This endpoint use for get opponent based on level that available\
+        \ in the game. When you choose the name and send it from parameters, it will\
+        \ display data that you choosed."
+      operationId: getOpponents
+      parameters:
+      - name: name
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          enum:
+          - Novice
+          - Class D
+          - Class C
+          - Class B
+          - Class A
+          - Candidate Master
+          - Grand Master
+      responses:
+        "201":
+          description: Get opponent body schema response based on level in game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_5'
+              example:
+              - status: OK
+              - data:
+                - userId: 1
+                  username: binar1234
+                  level:
+                    name: Novice
+                    minPoint: 0
+                    maxPoint: 1199
+                  point: 10
+                  winRate: 10
+                - userId: 2
+                  username: sabrina12333
+                  level:
+                    name: Novice
+                    minPoint: 0
+                    maxPoint: 1199
+                  point: 3
+                  winRate: 1.5
+        "403":
+          description: "When player try to access, modify, and delete someone's else\
+            \ resource and other role"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+      security:
+      - AuthToken: []
+      x-swagger-router-controller: Game
+    post:
+      tags:
+      - Game
+      summary: Player challenge opponent
+      description: "This endpoint use for player challenge the opponent that player\
+        \ choose. When the opponent choose, room game will automatic create with request\
+        \ body."
+      operationId: postOpponents
+      requestBody:
+        $ref: '#/components/requestBodies/CreateUserRoomsRequest'
+      responses:
+        "201":
+          description: Create room responses body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_6'
+        "403":
+          description: "When player try to access, modify, and delete someone's else\
+            \ resource and other role"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+      security:
+      - AuthToken: []
+      x-swagger-router-controller: Game
+  /v1/opponent-challenges:
+    put:
+      tags:
+      - Game
+      summary: Player reject challenge from opponent
+      description: This endpoint use for opponent when reject the challenge. Room
+        will automatic closed.
+      operationId: rejectOpponents
+      parameters:
+      - name: challenge
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: reject
+      responses:
+        "201":
+          description: Reject challenge and closed room responses body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_7'
+        "403":
+          description: "When player try to access, modify, and delete someone's else\
+            \ resource and other role"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+      security:
+      - AuthToken: []
+      x-swagger-router-controller: Game
+    post:
+      tags:
+      - Game
+      summary: Player accept challenge from opponent
+      description: This endpoint use for opponent when accept the challenge. Game
+        will automatic create and first round will be start
+      operationId: acceptOpponents
+      parameters:
+      - name: challenge
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: accept
+      responses:
+        "201":
+          description: Create game and start first round responses body schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_8'
+        "403":
+          description: "When player try to access, modify, and delete someone's else\
+            \ resource and other role"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+      security:
+      - AuthToken: []
+      x-swagger-router-controller: Game
+  /v1/users:
+    get:
+      tags:
+      - Admin
+      summary: Get all user from database
+      description: This endpoint for get all user credential include biodata and can
+        only be accessed by admin.
+      operationId: getAllUser
+      responses:
+        "201":
+          description: Response body schema for get all user operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_9'
+              example:
+              - status: OK
+              - data:
+                - id: 1
+                  user:
+                    id: 1
+                    username: binar1234
+                  avatarUrl: my-photo.jpg
+                  bio: twitter.com/novia10
+                  phoneNumber: 897545256
+                  address: "Tanjung Priok, Jakarta"
+                - id: 2
+                  user:
+                    id: 2
+                    username: sabrinaa1223
+                  avatarUrl: goodphoto.jpg
+                  bio: instagram.com/sabs123
+                  phoneNumber: 98234234
+                  address: "Tabanan, Bali"
+        "403":
+          description: "When player try to access, modify, and delete someone's else\
+            \ resource and other role"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+      security:
+      - AuthToken: []
+      x-swagger-router-controller: Admin
+  /v1/games:
+    get:
+      tags:
+      - Admin
+      summary: Get all games that user played
+      description: This endpoint for get games data that user played from database
+        and can only access by admin
+      operationId: getAllGames
+      responses:
+        "201":
+          description: Response body schema for get all game from database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_10'
+              example:
+              - status: OK
+              - data:
+                - id: 1
+                  state: WAITING...
+                  roundCount: 0
+                  createdAt: 12-12-2021
+                - id: 2
+                  state: FINISHED
+                  winner:
+                    id: 1
+                    username: binar1234
+                  roundCount: 3
+                  createdAt: 01-10-2021
+                  finishedAt: 02-10-2021
+                - id: 3
+                  state: STARTED
+                  winner:
+                    id: 1
+                    username: binar1234
+                  roundCount: 2
+                  createdAt: 06-08-2021
+                  finishedAt: 02-10-2021
+        "403":
+          description: "When player try to access, modify, and delete someone's else\
+            \ resource and other role"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+      security:
+      - AuthToken: []
+      x-swagger-router-controller: Admin
+  /v1/all-rooms:
+    get:
+      tags:
+      - Admin
+      summary: Get all rooms game
+      description: This endpoint for get all room from database and can only access
+        by admin
+      operationId: getAllRooms
+      responses:
+        "201":
+          description: Get all rooms played in game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_11'
+              example:
+              - status: OK
+              - data:
+                  room:
+                  - id: 1
+                    name: room acak
+                    status: open
+                    createdAt: 09-02-2022
+                    game:
+                      id: 1
+                      state: WAITING...
+                      roundCount: 0
+                      createdAt: 12-12-2021
+                  - id: 2
+                    name: yakxs
+                    status: closed
+                    createdAt: 09-02-2022
+                    closedAt: 09-02-2022
+                    game:
+                      id: 1
+                      state: FINISHED
+                      winner:
+                        id: 1
+                        username: binar1234
+                      roundCount: 3
+                      createdAt: 01-10-2021
+                      finishedAt: 02-10-2021
+                  - id: 3
+                    name: room key
+                    status: closed
+                    createdAt: 09-02-2022
+                    closedAt: 09-02-2022
+                    game:
+                      id: 3
+                      state: STARTED
+                      roundCount: 2
+                      createdAt: 06-08-2021
+        "403":
+          description: "When player try to access, modify, and delete someone's else\
+            \ resource and other role"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+      security:
+      - AuthToken: []
+      x-swagger-router-controller: Admin
+  /v1/rounds:
+    get:
+      tags:
+      - Admin
+      summary: Get all round record
+      description: This endpoint for get all round record from player game and can
+        only access by admin
+      operationId: getAllrounds
+      responses:
+        "201":
+          description: Get round record in game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_4'
+              example:
+              - status: OK
+              - data:
+                  round:
+                  - id: 1
+                    number: 1
+                    state: PLAYER_1_TURN
+                    createdAt: 19-03-2021
+                    finishedAt: 02-10-2021
+                    game:
+                      id: 1
+                      state: STARTED
+                      winner:
+                        id: 2
+                        username: sabrinaa12333
+                      roundCount: 1
+                      createdAt: 01-10-2021
+                      finishedAt: 02-10-2021
+                    user:
+                      id: 1
+                      username: binar1234
+                    choice: ROCK
+                    winner:
+                      id: 2
+                      username: sabrinaa12333
+                  - id: 2
+                    number: 1
+                    state: PLAYER_2_TURN
+                    createdAt: 19-03-2021
+                    finishedAt: 02-10-2021
+                    game:
+                      id: 1
+                      state: STARTED
+                      winner:
+                        id: 2
+                        username: sabrinaa12333
+                      roundCount: 1
+                      createdAt: 01-10-2021
+                      finishedAt: 02-10-2021
+                    user:
+                      id: 2
+                      username: sabrinaa12333
+                    choice: PAPER
+                    winner:
+                      id: 2
+                      username: sabrinaa12333
+                  - id: 3
+                    number: 1
+                    state: FINISHED
+                    createdAt: 19-03-2021
+                    finishedAt: 02-10-2021
+                    game:
+                      id: 1
+                      state: STARTED
+                      winner:
+                        id: 1
+                        username: binar1234
+                      roundCount: 1
+                      createdAt: 01-10-2021
+                      finishedAt: 02-10-2021
+                    user:
+                    - id: 1
+                      username: binar1234
+                      choice: ROCK
+                    - id: 2
+                      username: sabrinaa12333
+                      choice: PAPER
+                    winner:
+                      id: 2
+                      username: sabrinaa12333
+        "403":
+          description: "When player try to access, modify, and delete someone's else\
+            \ resource and other role"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+      security:
+      - AuthToken: []
+      x-swagger-router-controller: Admin
+components:
+  schemas:
+    TokenEntity:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6ImJpbmFyMTIzNCIsIm5hbWUiOiJiaW5hcjEyMyJ9.keFGv6cT4lQBJyCe7kIKW3JZ2UY0jTPhqDe8IVSaUSs
+        refreshToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6ImJpbmFyMTIzNCIsIm5hbWUiOiJiaW5hcjEyMyJ9.keFGv6cT4lQBJyCe7kIKW3JZ2UY0jTPhqDe8IVSaUSs
+        expiresAt:
+          type: number
+          description: Expires time after you get token
+          example: 12000
+      example:
+        accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6ImJpbmFyMTIzNCIsIm5hbWUiOiJiaW5hcjEyMyJ9.keFGv6cT4lQBJyCe7kIKW3JZ2UY0jTPhqDe8IVSaUSs
+        expiresAt: 12000
+        refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6ImJpbmFyMTIzNCIsIm5hbWUiOiJiaW5hcjEyMyJ9.keFGv6cT4lQBJyCe7kIKW3JZ2UY0jTPhqDe8IVSaUSs
+    BiodataEntity:
+      type: object
+      properties:
+        id:
+          type: number
+        user:
+          $ref: '#/components/schemas/UserEntity'
+        avatarUrl:
+          type: string
+        bio:
+          type: string
+        phoneNumber:
+          type: string
+        address:
+          type: string
+    UserEntity:
+      type: object
+      properties:
+        id:
+          type: number
+        username:
+          type: string
+    GameEntity:
+      type: object
+      properties:
+        id:
+          type: number
+        state:
+          type: string
+        winner:
+          $ref: '#/components/schemas/UserEntity'
+        roundCount:
+          type: number
+        createdAt:
+          type: string
+        finishedAt:
+          type: string
+    RoomEntity:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+        closedAt:
+          type: string
+        games:
+          $ref: '#/components/schemas/GameEntity'
+    UserRoomEntity:
+      type: object
+      properties:
+        player:
+          $ref: '#/components/schemas/UserEntity'
+        room:
+          $ref: '#/components/schemas/RoomEntity'
+    RoundEntity:
+      type: object
+      properties:
+        id:
+          type: number
+        number:
+          type: number
+        state:
+          type: string
+        createdAt:
+          type: string
+        finishedAt:
+          type: string
+        game:
+          $ref: '#/components/schemas/GameEntity'
+        winner:
+          $ref: '#/components/schemas/UserEntity'
+    UserRoundEntity:
+      type: object
+      properties:
+        round:
+          $ref: '#/components/schemas/RoundEntity'
+        user:
+          $ref: '#/components/schemas/UserEntity'
+        choice:
+          type: string
+        winner:
+          type: string
+    UserGameEntity:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserEntity'
+        game:
+          $ref: '#/components/schemas/GameEntity'
+        isWinner:
+          type: boolean
+    StatsEntity:
+      type: object
+      properties:
+        id:
+          type: number
+        user:
+          $ref: '#/components/schemas/UserEntity'
+        level:
+          $ref: '#/components/schemas/LevelEntity'
+        point:
+          type: number
+        winRate:
+          type: number
+    LevelEntity:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+          enum:
+          - Novice
+          - Class D
+          - Class C
+          - Class B
+          - Class A
+          - Candidate Master
+          - Grand Master
+        minPoint:
+          type: integer
+          enum:
+          - 0
+          - 1200
+          - 1400
+          - 1600
+          - 1800
+          - 2000
+          - 2500
+        maxPoint:
+          type: integer
+          enum:
+          - 1199
+          - 1399
+          - 1599
+          - 1799
+          - 1999
+          - 2499
+          - 9999999
+    inline_response_200:
+      type: object
+      properties:
+        name:
+          type: string
+          example: OK
+        message:
+          type: string
+          example: success
+      example:
+        name: OK
+        message: success
+    inline_response_201:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        data:
+          $ref: '#/components/schemas/TokenEntity'
+      example:
+        data:
+          accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6ImJpbmFyMTIzNCIsIm5hbWUiOiJiaW5hcjEyMyJ9.keFGv6cT4lQBJyCe7kIKW3JZ2UY0jTPhqDe8IVSaUSs
+          expiresAt: 12000
+          refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6ImJpbmFyMTIzNCIsIm5hbWUiOiJiaW5hcjEyMyJ9.keFGv6cT4lQBJyCe7kIKW3JZ2UY0jTPhqDe8IVSaUSs
+        status: OK
+    inline_response_401:
+      type: object
+      properties:
+        status:
+          type: string
+          example: Fail
+        data:
+          $ref: '#/components/schemas/inline_response_401_data'
+    inline_response_422:
+      type: object
+      properties:
+        status:
+          type: string
+          example: Fail
+        data:
+          $ref: '#/components/schemas/inline_response_422_data'
+    inline_response_201_1:
+      allOf:
+      - $ref: '#/components/schemas/BiodataEntity'
+      - type: object
+        properties:
+          status:
+            type: string
+    inline_response_403:
+      type: object
+      properties:
+        status:
+          type: string
+          example: Fail
+        data:
+          $ref: '#/components/schemas/inline_response_403_data'
+    inline_response_404:
+      type: object
+      properties:
+        status:
+          type: string
+          example: Fail
+        data:
+          $ref: '#/components/schemas/inline_response_404_data'
+    inline_response_201_2:
+      allOf:
+      - type: object
+        properties:
+          status:
+            type: string
+      - $ref: '#/components/schemas/RoomEntity'
+    inline_response_201_3:
+      allOf:
+      - type: object
+        properties:
+          status:
+            type: string
+      - $ref: '#/components/schemas/UserGameEntity'
+    inline_response_201_4:
+      allOf:
+      - type: object
+        properties:
+          status:
+            type: string
+      - $ref: '#/components/schemas/UserRoundEntity'
+    inline_response_201_5:
+      allOf:
+      - type: object
+        properties:
+          status:
+            type: string
+      - $ref: '#/components/schemas/StatsEntity'
+    inline_response_201_6:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        data:
+          $ref: '#/components/schemas/inline_response_201_6_data'
+      example:
+        data:
+          name: SUCCESS_CREATE_ROOM
+          message: Waiting opponent to join room..
+        status: OK
+    inline_response_201_7:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        data:
+          $ref: '#/components/schemas/inline_response_201_7_data'
+      example:
+        data:
+          name: ROOM_CLOSED
+          message: "Room closed, you can not started the game."
+        status: OK
+    inline_response_201_8:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        data:
+          $ref: '#/components/schemas/inline_response_201_8_data'
+      example:
+        data: "{\"name\":\"GAME_STARTED\",\"message\":\"Succes join room, game and\
+          \ first round will be start\"}"
+        status: OK
+    inline_response_201_9:
+      allOf:
+      - type: object
+        properties:
+          status:
+            type: string
+      - $ref: '#/components/schemas/UserEntity'
+    inline_response_201_10:
+      allOf:
+      - $ref: '#/components/schemas/GameEntity'
+      - type: object
+        properties:
+          status:
+            type: string
+    inline_response_201_11:
+      allOf:
+      - type: object
+        properties:
+          status:
+            type: string
+      - $ref: '#/components/schemas/UserRoomEntity'
+    inline_response_401_data:
+      properties:
+        name:
+          type: string
+          example: UNAUTHORIZED
+        message:
+          type: string
+          enum:
+          - Username doesn't exist
+          - Wrong password!
+    inline_response_422_data:
+      properties:
+        name:
+          type: string
+          example: FAIL_TO_REGISTER
+        message:
+          type: string
+          example: Username already exist!
+    inline_response_403_data:
+      properties:
+        name:
+          type: string
+          example: FORBIDDEN
+        message:
+          type: string
+          example: "You're not allow to access, retrieve or modify this resource!"
+    inline_response_404_data:
+      properties:
+        name:
+          type: string
+          example: Not Found
+        message:
+          type: string
+          example: Page not found!
+    inline_response_201_6_data:
+      properties:
+        name:
+          type: string
+          example: SUCCESS_CREATE_ROOM
+        message:
+          type: string
+          example: Waiting opponent to join room..
+      example:
+        name: SUCCESS_CREATE_ROOM
+        message: Waiting opponent to join room..
+    inline_response_201_7_data:
+      properties:
+        name:
+          type: string
+          example: ROOM_CLOSED
+        message:
+          type: string
+          example: "Room closed, you can not started the game."
+      example:
+        name: ROOM_CLOSED
+        message: "Room closed, you can not started the game."
+    inline_response_201_8_data:
+      properties:
+        name:
+          type: string
+          example: GAME_STARTED
+        message:
+          type: string
+          example: "Succes join room, game and first round will be start"
+      example: "{\"name\":\"GAME_STARTED\",\"message\":\"Succes join room, game and\
+        \ first round will be start\"}"
+  responses:
+    OKResponses:
+      description: Body schema responses for main API
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_200'
+    TokenOKResponses:
+      description: Login and register response body schema
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_201'
+    CredentialFailResponses:
+      description: Fail responses body schema
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_401'
+    UsernameAlreadyExistErrorResponses:
+      description: Failed to register response body schema
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_422'
+    BiodataOKResponses:
+      description: Biodata response body schema for create and get operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_201_1'
+          example:
+          - status: OK
+          - data:
+              id: 1
+              user:
+                id: 1
+                username: sabrinaok3
+              avatarUrl: my-photo.jpg
+              bio: twitter.com/novia10
+              phoneNumber: 897545256
+              address: Tanjung Priok Jakarta
+    UserOKResponses:
+      description: Response body schema for get all user operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_201_9'
+          example:
+          - status: OK
+          - data:
+            - id: 1
+              user:
+                id: 1
+                username: binar1234
+              avatarUrl: my-photo.jpg
+              bio: twitter.com/novia10
+              phoneNumber: 897545256
+              address: "Tanjung Priok, Jakarta"
+            - id: 2
+              user:
+                id: 2
+                username: sabrinaa1223
+              avatarUrl: goodphoto.jpg
+              bio: instagram.com/sabs123
+              phoneNumber: 98234234
+              address: "Tabanan, Bali"
+    GamesOKResponses:
+      description: Response body schema for get all game from database
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_201_10'
+          example:
+          - status: OK
+          - data:
+            - id: 1
+              state: WAITING...
+              roundCount: 0
+              createdAt: 12-12-2021
+            - id: 2
+              state: FINISHED
+              winner:
+                id: 1
+                username: binar1234
+              roundCount: 3
+              createdAt: 01-10-2021
+              finishedAt: 02-10-2021
+            - id: 3
+              state: STARTED
+              winner:
+                id: 1
+                username: binar1234
+              roundCount: 2
+              createdAt: 06-08-2021
+              finishedAt: 02-10-2021
+    ForbiddenErrorResponses:
+      description: "When player try to access, modify, and delete someone's else resource\
+        \ and other role"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_403'
+    NotFoundErrorResponses:
+      description: Error response if id or page not found or unavailabel
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_404'
+    GetAllRoomsResponses:
+      description: Get all rooms played in game
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_201_11'
+          example:
+          - status: OK
+          - data:
+              room:
+              - id: 1
+                name: room acak
+                status: open
+                createdAt: 09-02-2022
+                game:
+                  id: 1
+                  state: WAITING...
+                  roundCount: 0
+                  createdAt: 12-12-2021
+              - id: 2
+                name: yakxs
+                status: closed
+                createdAt: 09-02-2022
+                closedAt: 09-02-2022
+                game:
+                  id: 1
+                  state: FINISHED
+                  winner:
+                    id: 1
+                    username: binar1234
+                  roundCount: 3
+                  createdAt: 01-10-2021
+                  finishedAt: 02-10-2021
+              - id: 3
+                name: room key
+                status: closed
+                createdAt: 09-02-2022
+                closedAt: 09-02-2022
+                game:
+                  id: 3
+                  state: STARTED
+                  roundCount: 2
+                  createdAt: 06-08-2021
+    GetAllRoundsResponses:
+      description: Get round record in game
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_201_4'
+          example:
+          - status: OK
+          - data:
+              round:
+              - id: 1
+                number: 1
+                state: PLAYER_1_TURN
+                createdAt: 19-03-2021
+                finishedAt: 02-10-2021
+                game:
+                  id: 1
+                  state: STARTED
+                  winner:
+                    id: 2
+                    username: sabrinaa12333
+                  roundCount: 1
+                  createdAt: 01-10-2021
+                  finishedAt: 02-10-2021
+                user:
+                  id: 1
+                  username: binar1234
+                choice: ROCK
+                winner:
+                  id: 2
+                  username: sabrinaa12333
+              - id: 2
+                number: 1
+                state: PLAYER_2_TURN
+                createdAt: 19-03-2021
+                finishedAt: 02-10-2021
+                game:
+                  id: 1
+                  state: STARTED
+                  winner:
+                    id: 2
+                    username: sabrinaa12333
+                  roundCount: 1
+                  createdAt: 01-10-2021
+                  finishedAt: 02-10-2021
+                user:
+                  id: 2
+                  username: sabrinaa12333
+                choice: PAPER
+                winner:
+                  id: 2
+                  username: sabrinaa12333
+              - id: 3
+                number: 1
+                state: FINISHED
+                createdAt: 19-03-2021
+                finishedAt: 02-10-2021
+                game:
+                  id: 1
+                  state: STARTED
+                  winner:
+                    id: 1
+                    username: binar1234
+                  roundCount: 1
+                  createdAt: 01-10-2021
+                  finishedAt: 02-10-2021
+                user:
+                - id: 1
+                  username: binar1234
+                  choice: ROCK
+                - id: 2
+                  username: sabrinaa12333
+                  choice: PAPER
+                winner:
+                  id: 2
+                  username: sabrinaa12333
+    OpenRoomResponses:
+      description: Response body schema for get all open room in game
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_201_2'
+          example:
+          - status: OK
+          - data:
+            - id: 1
+              name: room acak
+              status: open
+              createdAt: 09-02-2022
+              game:
+                id: 1
+                state: WAITING...
+                roundCount: 0
+                createdAt: 12-12-2021
+            - id: 2
+              name: justroom
+              status: open
+              createdAt: 09-02-2022
+              game:
+                id: 1
+                state: WAITING...
+                roundCount: 0
+                createdAt: 12-12-2021
+    CurrentGamesResponses:
+      description: Response body schema for get game that user played
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_201_3'
+          example:
+          - status: OK
+          - data:
+            - id: 1
+              username: sabrina12333
+              game:
+              - id: 1
+                state: FINISHED
+                winner:
+                  id: 1
+                  username: binar1234
+                roundCount: 3
+                createdAt: 01-10-2021
+                finishedAt: 02-10-2021
+                isWinner: false
+              - id: 2
+                state: STARTED
+                roundCount: 1
+                createdAt: 01-10-2021
+    CurrentRoundResponses:
+      description: Response body schema for get round where user as player
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_201_4'
+          example:
+          - status: OK
+          - data:
+              Round:
+              - id: 1
+                number: 1
+                state: PLAYER_1_TURN
+                createdAt: 19-03-2021
+                finishedAt: 02-10-2021
+                game:
+                  id: 1
+                  state: FINISHED
+                  winner:
+                    id: 1
+                    username: binar1234
+                  roundCount: 1
+                  createdAt: 01-10-2021
+                  finishedAt: 02-10-2021
+                user:
+                  id: 1
+                  username: binar1234
+                choice: ROCK
+                winner:
+                  id: 1
+                  username: binar1234
+              - id: 3
+                number: 1
+                state: FINISHED
+                createdAt: 19-03-2021
+                finishedAt: 02-10-2021
+                game:
+                  id: 1
+                  state: FINISHED
+                  winner:
+                    id: 1
+                    username: binar1234
+                  roundCount: 2
+                  createdAt: 01-10-2021
+                  finishedAt: 02-10-2021
+                user:
+                - id: 1
+                  username: binar1234
+                  choice: PAPER
+                - id: 2
+                  username: sabrinaa12333
+                  choice: ROCK
+                winner:
+                  id: 1
+                  username: binar1234
+              - id: 7
+                number: 1
+                state: PLAYER_TWO_TURN
+                createdAt: 19-07-2021
+                Game:
+                  id: 2
+                  state: STARTED
+                  roundCount: 1
+                  createdAt: 01-10-2021
+    CurrentStatsResponses:
+      description: Response body schema for get player stats from game
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_201_5'
+          example:
+          - status: OK
+          - data:
+              id: 1
+              user:
+                username: binar1234
+              level:
+                id: 1
+                name: Novice
+                minPoint: 0
+                maxPoint: 1199
+              point: 10
+              winRate: 10
+    OpponentOKResponses:
+      description: Get opponent body schema response based on level in game
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_201_5'
+          example:
+          - status: OK
+          - data:
+            - userId: 1
+              username: binar1234
+              level:
+                name: Novice
+                minPoint: 0
+                maxPoint: 1199
+              point: 10
+              winRate: 10
+            - userId: 2
+              username: sabrina12333
+              level:
+                name: Novice
+                minPoint: 0
+                maxPoint: 1199
+              point: 3
+              winRate: 1.5
+    RoomOKResponses:
+      description: Create room responses body schema
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_201_6'
+    GameOKResponses:
+      description: Create game and start first round responses body schema
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_201_8'
+    GameRejectResponses:
+      description: Reject challenge and closed room responses body schema
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_201_7'
+    RoundOKResponses:
+      description: Responses body schema for create round and result round
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_201_4'
+          example:
+          - status: OK
+          - data_example_1:
+              id: 1
+              number: 1
+              state: PLAYER_1_TURN
+              choice: ROCK
+            message: Waiting opponent choice..
+          - data_example_2:
+              id: 3
+              number: 3
+              state: FINISHED
+              winner:
+                id: 1
+                username: binar1234
+              createdAt: 01-10-2021
+              finishedAt: 02-10-2021
+  requestBodies:
+    LoginRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+            example:
+              username: binar1234
+              password: password-rahasia
+      required: true
+    RegistrationRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                maxLength: 20
+                minLength: 6
+                type: string
+              password:
+                minLength: 6
+                type: string
+            example:
+              username: binar1234
+              password: password-rahasia
+      required: true
+    CreateBiodataRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BiodataEntity'
+          example:
+            avatarUrl: my-photo.jpg
+            bio: twitter.com/novia10
+            phoneNumber: 897545256
+            address: Tanjung Priok Jakarta
+      required: true
+    CreateUserRoomsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserRoomEntity'
+          example:
+            player:
+            - id: 1
+              username: binar1234
+            - id: 2
+              username: sabrinaa1223
+            room:
+              name: room key
+      required: true
+    RoundOKRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserRoundEntity'
+          example:
+            choice: ROCK
+      required: true
+  securitySchemes:
+    AuthToken:
+      type: http
+      description: Retrieve it via Authentication tagged endpoint.
+      scheme: bearer
+      bearerFormat: JWT

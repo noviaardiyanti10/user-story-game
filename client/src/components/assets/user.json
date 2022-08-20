@@ -1,0 +1,81 @@
+{
+  "User": [
+    {
+      "username": "herman200",
+      "password": "12345678",
+      "point": 100,
+      "level": "NOVICE",
+      "id": 1
+    },
+    {
+      "username": "adminBinar7788",
+      "password": "12345678",
+      "point": 0,
+      "level": "NOVICE",
+      "id": 2
+    },
+    {
+      "username": "putunovia546",
+      "password": "12345678",
+      "point": 0,
+      "level": "NOVICE",
+      "id": 3
+    },
+    {
+      "username": "salsa10",
+      "password": "12345678",
+      "point": 0,
+      "level": "NOVICE",
+      "id": 4
+    },
+    {
+      "username": "tes123456",
+      "password": "12345678",
+      "point": 0,
+      "level": "NOVICE",
+      "id": 5
+    },
+    {
+      "username": "admingame12345",
+      "password": "12345678",
+      "point": 0,
+      "level": "NOVICE",
+      "id": 6
+    },
+    {
+      "username": "putunovia54678",
+      "password": "12345678",
+      "point": 0,
+      "level": "NOVICE",
+      "id": 7
+    },
+    {
+      "username": "abcd123456",
+      "password": "12345678",
+      "point": 0,
+      "level": "NOVICE",
+      "id": 8
+    },
+    {
+      "username": "ardi123456",
+      "password": "12345678",
+      "point": 0,
+      "level": "NOVICE",
+      "id": 10
+    },
+    {
+      "username": "yuhu12345",
+      "password": "12345678",
+      "point": 0,
+      "level": "NOVICE",
+      "id": 11
+    },
+    {
+      "username": "yuhu1234",
+      "password": "12345678",
+      "point": 0,
+      "level": "NOVICE",
+      "id": 12
+    }
+  ]
+}

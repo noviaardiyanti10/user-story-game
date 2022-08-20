@@ -1,0 +1,69 @@
+body{
+    background-image: radial-gradient(33.26% 45% at 64.32% 47.1%, rgba(255, 255, 255, 0) 3.36%, rgba(0, 0, 0, 0.329) 19.22%, #080a0b8e 99.74%), url(../assets/img/bg\ image\ 4.png);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    width: 100%;
+    height: 100vh;
+}
+.btn-control Button{
+    border-color: rgba(38, 38, 38, 1) !important;
+    min-width: 8.5rem;
+    max-width: 8.5rem;
+    min-height: 4.3rem;
+    max-height: 4.3rem;
+    margin-right: 0.7rem !important; 
+    font-size: 0.9rem !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color: white;
+}
+
+.btn-down{
+    background-color: rgba(38, 38, 38, 1) !important;
+}
+
+Button:hover, .btn-click{
+    background-color: orange !important;
+}
+.btn-click:focus, .btn-click:visited{
+    background-color: orange !important;
+}
+
+.content{
+    margin-top: 4rem;
+}
+
+.bio{
+    height: 15rem;
+}
+
+.profil-op, .eclipse{
+    width: 3rem !important;
+    height: 3rem;
+}
+
+.profil-op{
+    margin-top: -4.9rem;
+    margin-left: -0.3rem;
+
+}
+
+.bio .name{
+    letter-spacing: 0.1rem;
+    font-size: 0.9rem;
+}
+
+.bio .level{
+    font-size: 0.6rem;
+}
+.bio .op-bio{
+    font-size: 0.9rem;
+}
+
+.bio Button{
+    border-radius: 1rem;
+    font-size: 0.8rem;
+}

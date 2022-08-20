@@ -1,0 +1,12 @@
+.name{
+    letter-spacing: 0.1rem;
+    font-size: 0.9rem;
+}
+
+.level{
+    font-size: 0.8rem;
+}
+
+hr{
+    background-color: rgb(243, 243, 243) !important;
+}
